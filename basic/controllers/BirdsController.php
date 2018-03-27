@@ -40,7 +40,7 @@ class BirdsController extends Controller
          'roles' => ['?'], 
         ],
 
-        [ 'actions' => ['index','create','create-bird','logout','views-birds','create-edit','views-details','create-static-page','get-bird','auth'], 
+        [ 'actions' => ['index','create','create-bird','logout','views-birds','create-edit','views-details','create-static-page','get-bird','auth','coords-from-app'], 
         'allow' => true, 
         'roles' => ['@'], 
         ], 
@@ -436,6 +436,11 @@ protected function findModelBird($id)
                 'page' => $page,
             ]);
     }
+
+    /*  
+        API для приложений. Список птиц.
+    */
+
     public function actionGetBird(){
         // if(Yii::$app->request->post()){
         //     $str = Yii::$app->request->post('str');
@@ -459,6 +464,10 @@ protected function findModelBird($id)
         }
         return json_encode($arr);
     }
+    /*
+        Авторизация.
+    */
+
     public function actionAuth(){
         if (Yii::$app->request->isPost) {
             $user = User::find()->where(['username' => Yii::$app->request->post('username'),'password' => Yii::$app->request->post('password')])->one();
@@ -469,8 +478,24 @@ protected function findModelBird($id)
         }
         return json_encode(false);
     }
+    /*
+        Получение JSON.
+    */
+
+    public function actionCoordsFromApp(){
+        if (Yii::$app->request->isPost) {
+            $json = Yii::$app->request->post('json');
+            if(isset($json)){
+                return json_encode(true);
+            }
+            else
+                return json_encode(false);
+        }
+        return json_encode(false);
+    }
+
     public function beforeAction($action) {
-        if($action->id == 'auth'){
+        if($action->id == 'auth' || $action->id == 'coords-from-app'){
             $this->enableCsrfValidation = false; 
         }
         return parent::beforeAction($action);

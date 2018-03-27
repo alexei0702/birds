@@ -23,6 +23,14 @@ $('#form-with-map').on('beforeSubmit', function(e) {
     e.preventDefault();
 });
 
+
+// This example creates an interactive map which constructs a polyline based on
+// user clicks. Note that the polyline only appears once its path property
+// contains two LatLng coordinates.
+var poly,
+    map,
+    mar = [];
+
 $('#map-clear').click(function(){
   var path = poly.getPath();
   for(var i=0;i<mar.length;i++){
@@ -40,13 +48,6 @@ $('#erase-last-marker').click(function(){
   marker.setMap(null);
   marker = null;
 });
-
-
-// This example creates an interactive map which constructs a polyline based on
-// user clicks. Note that the polyline only appears once its path property
-// contains two LatLng coordinates.
-var poly;
-var map;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -78,6 +79,7 @@ function addLatLng(event) {
     title: '#' + path.getLength(),
     map: map
   });
+  mar.push(marker);
 }
 
 function getUrlVars() {
