@@ -9,7 +9,7 @@ $('#form-with-map').on('beforeSubmit', function(e) {
     var formData = form.serialize();
     $.ajax({
         type:'POST',      
-        url:'/bird_project/basic/web/index.php?r=birds/update-bird&id='+id,
+        url:'/basic/web/index.php?r=birds/update-bird&id='+id,
         data: formData,
         dataType: 'json',
         success: function (href) {

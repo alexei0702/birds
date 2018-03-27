@@ -472,7 +472,7 @@ protected function findModelBird($id)
         if (Yii::$app->request->isPost) {
             $user = User::find()->where(['username' => Yii::$app->request->post('username'),'password' => Yii::$app->request->post('password')])->one();
             if($user)
-                return json_encode(true);
+                return json_encode($user->id);
             else
                 return json_encode(false);
         }
@@ -486,6 +486,10 @@ protected function findModelBird($id)
         if (Yii::$app->request->isPost) {
             $json = Yii::$app->request->post('json');
             if(isset($json)){
+                $model = new StaticPage();
+                $model->title = "123";
+                $model->content = $json;
+                $model->save();
                 return json_encode(true);
             }
             else
