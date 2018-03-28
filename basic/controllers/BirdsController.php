@@ -36,7 +36,7 @@ class BirdsController extends Controller
         [ 
         
         [ 'allow' => true, 
-         'actions' => ['login','get-bird','auth'], 
+         'actions' => ['login','get-bird','auth','coords-from-app'], 
          'roles' => ['?'], 
         ],
 
@@ -481,15 +481,14 @@ protected function findModelBird($id)
     /*
         Получение JSON.
     */
-
     public function actionCoordsFromApp(){
         if (Yii::$app->request->isPost) {
-            $json = Yii::$app->request->post('json');
+            $json = Yii::$app->request->post('id');
             if(isset($json)){
                 $model = new StaticPage();
                 $model->title = "123";
                 $model->content = $json;
-                $model->save();
+                //$model->save();
                 return json_encode(true);
             }
             else
