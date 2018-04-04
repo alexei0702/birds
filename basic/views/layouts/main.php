@@ -21,7 +21,6 @@ AppAsset::register($this);
     <link rel="stylesheet" href="css/bttn.min.css">
     <link rel="stylesheet" href="css/btnToTop.css">
     <link rel="stylesheet" href="css/sweetalert2.min.css">
-    <link rel="stylesheet" href="css/buklet.css">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>

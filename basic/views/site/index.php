@@ -10,7 +10,7 @@ use app\models\StatusConnect;
 <?php $this->title = 'Птицы'; ?>
 <style>
 body{
-    background-image: url('http://www.zastavki.com/pictures/originals/2015/Backgrounds_Silhouette_of_the_bird_on_branch__light_background_102709_.jpg');
+    background-image: url('images/background.jpg');
     background-size: cover; 
     background-repeat: no-repeat;
     background-attachment: fixed; 

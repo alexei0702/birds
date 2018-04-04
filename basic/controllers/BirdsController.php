@@ -17,11 +17,13 @@ use app\models\PopulationConnect;
 use app\models\StatusConnect;
 use app\models\Population;
 use app\models\Create;
+use app\models\CoordsImages;
 use yii\data\Pagination;
 use app\models\User;
 use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\web\HttpException;
 
 class BirdsController extends Controller
 {
@@ -36,11 +38,11 @@ class BirdsController extends Controller
         [ 
         
         [ 'allow' => true, 
-         'actions' => ['login','get-bird','auth','coords-from-app'], 
+         'actions' => ['login'], 
          'roles' => ['?'], 
         ],
 
-        [ 'actions' => ['index','create','create-bird','logout','views-birds','create-edit','views-details','create-static-page','get-bird','auth','coords-from-app'], 
+        [ 'actions' => ['index','create','create-bird','logout','views-birds','create-edit','views-details','create-static-page', 'birds-from-app'], 
         'allow' => true, 
         'roles' => ['@'], 
         ], 
@@ -436,72 +438,14 @@ protected function findModelBird($id)
                 'page' => $page,
             ]);
     }
-
-    /*  
-        API для приложений. Список птиц.
+    /* 
+        Вывод птиц с приложения
     */
-
-    public function actionGetBird(){
-        // if(Yii::$app->request->post()){
-        //     $str = Yii::$app->request->post('str');
-        //     if(mb_strlen($str) < 3 || mb_strlen($str) > 256){
-        //         return;
-        //     }
-        //     $query = Bird::find()->where(['like','bird_name',$str])->all();
-        //     $arr = array();
-        //     foreach ($query as $value) {
-        //         $arr[]=$value->bird_name;
-        //     }
-        //     if(count($arr) > 0){
-        //         return json_encode($arr);
-        //     }
-        // }
-        // return;
-        $query = Bird::find()->all();
-        $arr = array();
-        foreach ($query as $value) {
-            $arr['birds'][]=$value->bird_name;
+        public function actionBirdsFromApp(){
+            $birds = CoordsImages::find()->all();
+            return $this->render('birdsFromApp', [
+                'birds' => $birds,
+            ]);
         }
-        return json_encode($arr);
-    }
-    /*
-        Авторизация.
-    */
-
-    public function actionAuth(){
-        if (Yii::$app->request->isPost) {
-            $user = User::find()->where(['username' => Yii::$app->request->post('username'),'password' => Yii::$app->request->post('password')])->one();
-            if($user)
-                return json_encode($user->id);
-            else
-                return json_encode(false);
-        }
-        return json_encode(false);
-    }
-    /*
-        Получение JSON.
-    */
-    public function actionCoordsFromApp(){
-        if (Yii::$app->request->isPost) {
-            $json = Yii::$app->request->post('id');
-            if(isset($json)){
-                $model = new StaticPage();
-                $model->title = "123";
-                $model->content = $json;
-                //$model->save();
-                return json_encode(true);
-            }
-            else
-                return json_encode(false);
-        }
-        return json_encode(false);
-    }
-
-    public function beforeAction($action) {
-        if($action->id == 'auth' || $action->id == 'coords-from-app'){
-            $this->enableCsrfValidation = false; 
-        }
-        return parent::beforeAction($action);
-    }
 }
 ?>
