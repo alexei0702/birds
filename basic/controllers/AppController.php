@@ -83,17 +83,17 @@ class AppController extends Controller
         $model = new CoordsImages();
         if (Yii::$app->request->isPost /*&& $model->load(Yii::$app->request->post())*/) {
             if(isset($_FILES) /*&& Yii::$app->request->post('id') != null && Yii::$app->request->post('x') != null && Yii::$app->request->post('y') != null && Yii::$app->request->post('bird') != null*/ ){
-                $model->id = Yii::$app->request->post('id');
-                $model->x = Yii::$app->request->post('x');
-                $model->y = Yii::$app->request->post('y');
-                $model->bird = Yii::$app->request->post('bird');
+                $model->user_id = Yii::$app->request->post("CoordsImages[user_id]") === null ? 1 : 2;
+                $model->x = Yii::$app->request->post("CoordsImages[x]") === null ? 1 : 2;
+                $model->y = Yii::$app->request->post("CoordsImages[y]") === null ? 1 : 2;
+                $model->bird_name = Yii::$app->request->post("CoordsImages[bird_name]") === null ? 1 : 2;
                 $model->image = UploadedFile::getInstanceByName('file0');
                 if($model->create()){
                     $model->save();
                     return json_encode(true);
                 }
                 else
-                    throw new HttpException(400);
+                    throw new HttpException(500);
             }
             else
                 throw new HttpException(500);

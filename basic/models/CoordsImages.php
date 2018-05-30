@@ -12,7 +12,7 @@ class CoordsImages extends \yii\db\ActiveRecord
 	public function rules()
     {
         return [
-            [['id', 'x', 'y', 'bird'], 'required'],
+            [['user_id', 'x', 'y', 'bird_name'], 'required'],
             [['image'],'default','value'=>""],
             [['image'], 'file', 'extensions' => ['png', 'jpg', 'gif','jpeg']],
         ];
@@ -21,7 +21,7 @@ class CoordsImages extends \yii\db\ActiveRecord
 
     public function create()
     {
-        if ($this->validate()) {
+        // if ($this->validate()) {
             // if($this->image==null)
             // {
             //     return false;
@@ -33,10 +33,10 @@ class CoordsImages extends \yii\db\ActiveRecord
                 /*chmod($_SERVER['DOCUMENT_ROOT'].'/basic/upload/' .time()."_". $this->link->baseName . '.' . $this->link->extension,0755);*/
                 return true;
         //} 
-    }   
-        else {
-            return false;
-        }
+    // }   
+    //     else {
+    //         return false;
+    //     }
         
     } 
 }
