@@ -8,6 +8,7 @@ use yii\web\Controller;
 use app\models\CoordsImages;
 use app\models\Bird;
 use app\models\User;
+use app\models\JsonTest;
 use yii\data\Pagination;
 use yii\web\UploadedFile;
 use yii\web\HttpException;
@@ -82,11 +83,11 @@ class AppController extends Controller
     public function actionCoordsFromApp(){
         $model = new CoordsImages();
         if (Yii::$app->request->isPost /*&& $model->load(Yii::$app->request->post())*/) {
-            if(isset($_FILES) /*&& Yii::$app->request->post('id') != null && Yii::$app->request->post('x') != null && Yii::$app->request->post('y') != null && Yii::$app->request->post('bird') != null*/ ){
-                $model->user_id = Yii::$app->request->post("CoordsImages[user_id]") === null ? 1 : 2;
-                $model->x = Yii::$app->request->post("CoordsImages[x]") === null ? 1 : 2;
-                $model->y = Yii::$app->request->post("CoordsImages[y]") === null ? 1 : 2;
-                $model->bird_name = Yii::$app->request->post("CoordsImages[bird_name]") === null ? 1 : 2;
+            if(isset($_FILES) && Yii::$app->request->post('user_id') !== null && Yii::$app->request->post('x') !== null && Yii::$app->request->post('y') !== null && Yii::$app->request->post('bird_name') !== null ){
+                $model->user_id = Yii::$app->request->post('user_id');
+                $model->x = Yii::$app->request->post('x');
+                $model->y = Yii::$app->request->post('y');
+                $model->bird_name = Yii::$app->request->post('bird_name');
                 $model->image = UploadedFile::getInstanceByName('file0');
                 if($model->create()){
                     $model->save();

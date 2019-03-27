@@ -4,22 +4,6 @@ $('#form-with-map').on('beforeSubmit', function(e) {
     for(var i=0;i<path.getLength();i++)
         coords.push(path.getAt(i)); 
     $('#coord').val(coords);
-    var form = $(this);
-    var formData = form.serialize();
-    $.ajax({
-        type:'POST',      
-        url:'/basic/web/index.php?r=birds/create-bird',
-        data: formData,
-        dataType: 'json',
-        success: function (href) {
-            window.location.replace(href);
-        },
-        error: function () {
-            alert("Something went wrong");
-        }
-    });
-}).on('submit', function(e){
-    e.preventDefault();
 });
 
 

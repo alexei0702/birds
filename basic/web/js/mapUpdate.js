@@ -5,22 +5,6 @@ $('#form-with-map').on('beforeSubmit', function(e) {
         coords.push(path.getAt(i)); 
     var id = getUrlVars()["id"];
     $('#coord').val(coords);
-    var form = $(this);
-    var formData = form.serialize();
-    $.ajax({
-        type:'POST',      
-        url:'/basic/web/index.php?r=birds/update-bird&id='+id,
-        data: formData,
-        dataType: 'json',
-        success: function (href) {
-            window.location.replace(href);
-        },
-        error: function () {
-            alert("Something went wrong");
-        }
-    });
-}).on('submit', function(e){
-    e.preventDefault();
 });
 
 

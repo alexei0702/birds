@@ -218,8 +218,7 @@ public function actionCreateBird()
                 if($path){
                     $this->saveCoords($path,$bird->bird_id);
                 }
-                $href = "index.php?r=birds/views-birds";
-                return json_encode($href);  
+                return $this->redirect(['views-birds']);  
             }
         }
         $squad = Squad::find()->all();
@@ -388,8 +387,7 @@ public function actionUpdateBird($id)
                     }
                     $this->saveCoords($path,$bird->bird_id);
                 }
-                $href = "index.php?r=birds/views-birds";
-                return json_encode($href);
+                return $this->redirect(['views-birds']);
             }
         } 
         else 
