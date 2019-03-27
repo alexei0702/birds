@@ -157,8 +157,7 @@ public function actionCreate()
             if (Yii::$app->request->isPost&&$model->load(Yii::$app->request->post()))
             {
                 $model->save();
-                header("Location:index.php?r=birds/create-edit&modelName=".$name); 
-                exit();
+                return $this->redirect(['create-edit', 'modelName' => $name]);
             }
             return $this->render($name.'Create', ['model' => $model]);
         }

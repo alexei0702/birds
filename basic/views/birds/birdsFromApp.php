@@ -15,7 +15,7 @@ if($i%3==0):
 <div class="col-md-4">
             <img src="<?='/basic/upload/coordsImages/'.$bird->image?>" width="300" height="300" class="img-rounded" alt="111">
             <br>
-            <?= Html::encode ("Название: {$bird->bird}") ?><br>
+            <?= Html::encode ("Название: {$bird->bird_name}") ?><br>
             <?= Html::encode ("x: {$bird->x}") ?><br>
             <?= Html::encode ("y: {$bird->y}") ?> <br>
 </div>

@@ -12,7 +12,7 @@ class Bird extends \yii\db\ActiveRecord
 	public function rules()
     {
         return [
-            [['bird_name','bird_name_lat', 'family_id','squad_id','kind_id', 'propagation', 'migration', 'habitat'], 'required'],
+            [['bird_name','bird_name_lat', 'family_id','squad_id','kind_id', 'propagation', 'migration', 'habitat', 'region'], 'required'],
             [['link'],'default','value'=>""],
             [['link'], 'file', 'extensions' => ['png', 'jpg', 'gif','jpeg']],
         ];
@@ -33,8 +33,8 @@ class Bird extends \yii\db\ActiveRecord
                 $this->link=time()."_".$this->link->baseName . '.' . $this->link->extension;
                 /*chmod($_SERVER['DOCUMENT_ROOT'].'/basic/upload/' .time()."_". $this->link->baseName . '.' . $this->link->extension,0755);*/
                 return true;
-        } 
-    }   
+            } 
+        }   
         else {
             return false;
         }

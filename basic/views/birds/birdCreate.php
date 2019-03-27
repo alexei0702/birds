@@ -74,6 +74,17 @@ echo $form->field($bird, 'migration',['inputOptions' => ['class' => 'textarea']]
 echo $form->field($bird, 'habitat',['inputOptions' => ['class' => 'textarea']])->textarea()->label('');
 ?>
 <br>
+
+<?php
+    $items = ['1' => 'Юг Восточной Сибири',
+              '2' => 'Республика Тыва'];
+    $params = [
+        'prompt' => 'Выберите регион'
+    ];
+    echo $form->field($bird, 'region',['inputOptions' => ['class' => 'form-control width']])->dropDownList($items,$params)->label('');
+?>
+
+<br>
 <p><h3>Численность:</h3></p>
 <div class="col-lg-5">
 <?php
