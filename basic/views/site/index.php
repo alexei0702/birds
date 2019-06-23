@@ -25,10 +25,11 @@ body{
 }
 
 </style>
+<?php $title = $region == 1 ? 'юга Восточной Сибири' : 'Республики Тыва';?> 
 <div class="banner">
     <h1 class="banner-head">
         Электронная база данных птиц<br>    
-        Юга Восточной Сибири
+        <?=$title?>
     </h1>
 </div>
 <?php if($display==0): ?>
@@ -44,7 +45,7 @@ body{
                 <li><a href="index.php?r=site/all-birds&sort=squad_id"><button class="bttn-minimal bttn-sm bttn-primary">Сортировать по отряду</button></a></li>
         </ul>
     </div>
-    <a href="index.php?r=site/index" class="btn-right"><button class="bttn-minimal bttn-sm bttn-primary">Показывать по 3</button></a>
+    <a href="index.php?r=site/index&region=<?=$_GET['region'] ? $_GET['region'] : 1 ?>" class="btn-right"><button class="bttn-minimal bttn-sm bttn-primary">Показывать по 3</button></a>
 <?php else: ?>
     <div class="btn-group" role="group">
         <button type="button" class="bttn-simple bttn-sm bttn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -55,10 +56,10 @@ body{
             <li><a href="index.php?r=site/index&sort=bird_name"><button class="bttn-minimal bttn-sm bttn-primary">Сортировать по имени</button></a></li>
             <li><a href="index.php?r=site/index&sort=kind_id"><button class="bttn-minimal bttn-sm bttn-primary">Сортировать по роду</button></a></li>
             <li><a href="index.php?r=site/index&sort=family_id"><button class="bttn-minimal bttn-sm bttn-primary">Сортировать по семейству</button></a></li>
-            <li><a href="index.php?r=site/index&sort=&sort=squad_id"><button class="bttn-minimal bttn-sm bttn-primary">Сортировать по отряду</button></a></li>
+            <li><a href="index.php?r=site/index&sort=squad_id"><button class="bttn-minimal bttn-sm bttn-primary">Сортировать по отряду</button></a></li>
         </ul>
     </div>
-    <a href="index.php?r=site/all-birds" class="btn-right"><button class="bttn-minimal bttn-sm bttn-primary">Показать лентой</button></a>
+    <a href="index.php?r=site/all-birds&region=<?=$_GET['region'] ? $_GET['region'] : 1 ?>" class="btn-right"><button class="bttn-minimal bttn-sm bttn-primary">Показать лентой</button></a>
 <?php endif; ?>
 <div class="row">
 <?php

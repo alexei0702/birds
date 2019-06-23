@@ -38,7 +38,7 @@ class BirdsController extends Controller
         [ 
         
         [ 'allow' => true, 
-         'actions' => ['login'], 
+         'actions' => ['login', 'generate-users'], 
          'roles' => ['?'], 
         ],
 
@@ -201,6 +201,7 @@ public function actionCreateBird()
         if (Yii::$app->request->isPost&&$st_con->load(Yii::$app->request->post())&&$popul_con->load(Yii::$app->request->post())&&$bird->load(Yii::$app->request->post()))
         {
             $bird->link = UploadedFile::getInstance($bird, 'link');
+            $bird->area = UploadedFile::getInstance($bird, 'area');
             if($bird->create())
             {
                 $bird->save();
@@ -341,6 +342,7 @@ public function actionUpdateBird($id)
     {
         $bird = $this->findModelBird($id);
         $link_old=$bird->link;
+        $area_old=$bird->area;
         $popul_con = new PopulationConnect();
         $st_con = new StatusConnect();
         $popul_con_old = PopulationConnect::find()->where(['bird_id'=>$id])->one();
@@ -354,10 +356,15 @@ public function actionUpdateBird($id)
         if ($st_con->load(Yii::$app->request->post())&&$popul_con->load(Yii::$app->request->post())&&$bird->load(Yii::$app->request->post()))
         {
             $link = UploadedFile::getInstance($bird, 'link');
+            $area = UploadedFile::getInstance($bird, 'area');
             if($link!=null)
                 $bird->link=$link;
             else
                 $bird->link=$link_old;
+            if($area!=null)
+                $bird->area=$area;
+            else
+                $bird->area=$area_old;
             if($bird->updateBird())
             {
                 $bird->save();
@@ -444,5 +451,29 @@ protected function findModelBird($id)
                 'birds' => $birds,
             ]);
         }
+    public function actionGenerateUsers(){
+        $id = User::find()->max('id');
+        $countUser = 17; 
+        $id++;
+        $n = $id + $countUser;
+        for(; $id < $n; $id++){
+            $user = new User();
+            $user->username = 'user_'.$id;
+            $user->password = $this->GenPassword(7);
+            $user->status = 1;
+            $user->description = 'ПРАКТИКА';
+            $user->groups = 'БГФ';
+            $user->save();
+            echo $user->username.' '.$user->password.'<br>';
+        }
+    }
+    function GenPassword ($length=10) {
+        $chars="qazxswedcvfrtgbnhyujmkiolp1234567890QAZXSWEDCVFRTGBNHYUJMKIOLP";
+        $length = intval($length);
+        $size=strlen($chars)-1;
+        $password = "";
+        while($length--) $password.=$chars[rand(0,$size)];
+        return $password;
+    }
 }
 ?>

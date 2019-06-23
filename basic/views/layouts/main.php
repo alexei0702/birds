@@ -45,6 +45,8 @@ AppAsset::register($this);
             'url' => ['site/about-project']],
             ['label' => 'О нас',
             'url' => ['site/about-us']],
+            ['label' => 'Республика Тыва',
+            'url' => ['site/index','region' => 2]],
             ]
         ]);
     if(!Yii::$app->user->isGuest)

@@ -77,5 +77,12 @@ $this->params['breadcrumbs'][] = $this->title;
         width: 100%;
     }
 </style>
-<div id="map"></div>
-<script src="js/map.js" defer></script>
+<?php if($bird->area == null): ?>
+    <div id="map"></div>
+    <script src="js/map.js" defer></script>
+<?php else: ?>
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4" style="margin-top:30px;">
+        <img src="<?= '/basic/upload/area/'.$bird->area?>" class="img-rounded img-responsive" alt="area">
+    </div>
+<?php endif; ?>

@@ -127,6 +127,8 @@ echo $form->field($bird, 'habitat',['inputOptions' => ['class' => 'textarea']])-
 <br>
 <input type="hidden" name="coords" id="coord">
 <br>
+<?= $form->field($bird, 'area')->fileInput()->label('Выберите фото ареала') ?>
+<br>
 <?= $form->field($bird, 'link')->fileInput()->label('Выберите фото птицы') ?>
 <button class="bttn-fill bttn-lg bttn-primary form-group" type="submit">Сохранить</button>
 <?php ActiveForm::end() ?>

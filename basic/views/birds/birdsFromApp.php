@@ -12,12 +12,15 @@ if($i%3==0):
 <br>
 <div class="row">
 <?php endif; ?>
-<div class="col-md-4">
-            <img src="<?='/basic/upload/coordsImages/'.$bird->image?>" width="300" height="300" class="img-rounded" alt="111">
+<div class="col-md-4" style="font-size: 16px;">
+            <img src="<?='/basic/upload/coordsImages/'.$bird->image?>" width="200" height="200" class="img-rounded" alt="111">
             <br>
             <?= Html::encode ("Название: {$bird->bird_name}") ?><br>
             <?= Html::encode ("x: {$bird->x}") ?><br>
             <?= Html::encode ("y: {$bird->y}") ?> <br>
+            <button class="btn btn-success">Принять</button>
+            <button class="btn btn-danger">Отклонить</button>
+            <button class="btn btn-warning">Подробнее</button>
 </div>
 <?php 
 $i++;

@@ -67,9 +67,9 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex($sort='bird_name')
+    public function actionIndex($sort='bird_name', $region = 1)
     {
-         $query = Bird::find();
+        $query = Bird::find()->where(['region' => $region]);
         $pagination = new Pagination([
             'defaultPageSize' => 6,
             'totalCount' => $query->count(),
@@ -83,20 +83,22 @@ class SiteController extends Controller
             'birds' => $birds,
             'pagination' => $pagination,
             'display' => $display,
+            'region' => $region,
         ]);
     }
     /**********************
     ***********************
     *********************/
-    public function actionAllBirds($sort='bird_name')
+    public function actionAllBirds($sort='bird_name', $region = 1)
     {
-        $query = Bird::find();
+        $query = Bird::find()->where(['region' => $region]);
         $birds = $query->orderBy($sort)
             ->all();
         $display = 0;
         return $this->render('index', [
             'birds' => $birds,
             'display' => $display,
+            'region' => $region,
         ]);
     }
 
