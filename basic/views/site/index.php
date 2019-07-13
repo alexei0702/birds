@@ -45,7 +45,7 @@ body{
                 <li><a href="index.php?r=site/all-birds&sort=squad_id"><button class="bttn-minimal bttn-sm bttn-primary">Сортировать по отряду</button></a></li>
         </ul>
     </div>
-    <a href="index.php?r=site/index&region=<?=$_GET['region'] ? $_GET['region'] : 1 ?>" class="btn-right"><button class="bttn-minimal bttn-sm bttn-primary">Показывать по 3</button></a>
+    <a href="index.php?r=site/index&region=<?=isset($_GET['region']) ? $_GET['region'] : 1 ?>" class="btn-right"><button class="bttn-minimal bttn-sm bttn-primary">Показывать по 3</button></a>
 <?php else: ?>
     <div class="btn-group" role="group">
         <button type="button" class="bttn-simple bttn-sm bttn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -59,7 +59,7 @@ body{
             <li><a href="index.php?r=site/index&sort=squad_id"><button class="bttn-minimal bttn-sm bttn-primary">Сортировать по отряду</button></a></li>
         </ul>
     </div>
-    <a href="index.php?r=site/all-birds&region=<?=$_GET['region'] ? $_GET['region'] : 1 ?>" class="btn-right"><button class="bttn-minimal bttn-sm bttn-primary">Показать лентой</button></a>
+    <a href="index.php?r=site/all-birds&region=<?=isset($_GET['region']) ? $_GET['region'] : 1 ?>" class="btn-right"><button class="bttn-minimal bttn-sm bttn-primary">Показать лентой</button></a>
 <?php endif; ?>
 <div class="row">
 <?php
