@@ -33,7 +33,7 @@ $('#erase-last-marker').click(function(){
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 5,
-    center: {lat:53.248006,lng: 110.281535}  // Center the map on Chicago, USA.
+    center: {lat:53.248006,lng: 110.281535}
   });
 
   poly = new google.maps.Polyline({

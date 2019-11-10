@@ -110,21 +110,17 @@ echo $form->field($bird, 'habitat',['inputOptions' => ['class' => 'textarea']])-
 <div class="clearfix"></div>
 <style type="text/css">
     #map{
-        height: 325px;
+        height: 500px;
         width: 100%;
     }
 </style>
 <div id="map"></div>
-<?php if($update==1):?>
-<script src="js/mapCreate.js" defer></script>
-<?php endif; ?>
-<?php if($update==2):?>
-<script src="js/mapUpdate.js" defer></script>
-<?php endif; ?>
-<br>
-<button type="button" id="map-clear">Очистить карту</button>
-<button type="button" id="erase-last-marker">Удалить последний маркер</button>
-<br>
+
+<button id="get-coords" type="button">show coords</button>
+<button id="add-polygon" type="button">Add new polygon</button>
+
+<script src="js/map-create.js" defer></script>
+
 <input type="hidden" name="coords" id="coord">
 <br>
 <?= $form->field($bird, 'area')->fileInput()->label('Выберите фото ареала') ?>
