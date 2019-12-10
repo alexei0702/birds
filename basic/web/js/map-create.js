@@ -1,13 +1,10 @@
-$('#form-with-map').on('beforeSubmit', function(e) {
-    var path = poly.getPath();
-    var coords = [];
-    for(var i=0;i<path.getLength();i++)
-        coords.push(path.getAt(i)); 
-    $('#coord').val(coords);
-});
-
 var map;
 var myPolygon = [];
+
+$('#form-with-map').on('submit', function(e) {
+    let coords = getCoords();
+    $('#coord').val(JSON.stringify(coords));
+});
 
 function startCoords () {
   const triangleCoords = [
@@ -44,17 +41,18 @@ function initMap() {
   myPolygon.push(polygon);
 }
 
-$('#get-coords').click(getCoords);
 $('#add-polygon').click(addPolygon);
 
-
 function getCoords () {
+  let result = [];
   for (let i = 0; i < myPolygon.length; i++) {
     let poly = myPolygon[i].getPath();
+    result[i] = [];
     for (let j = 0; j < poly.length; j++) {
-      console.log(`Polygon # ${i}: (${poly.getAt(j).lat()},${poly.getAt(j).lng()})`)
+      result[i].push({lat: poly.getAt(j).lat(), lng: poly.getAt(j).lng()});
     }
   }
+  return result;
 }
 
 function addPolygon () {

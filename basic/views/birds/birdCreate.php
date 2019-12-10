@@ -114,10 +114,11 @@ echo $form->field($bird, 'habitat',['inputOptions' => ['class' => 'textarea']])-
         width: 100%;
     }
 </style>
+<p style='font-size: 20px;'> Чтобы удалить полигон, нужно зажать клавишу CTRL и кликнуть по полигону левой кнопкой мыши. </p>
+
 <div id="map"></div>
 
-<button id="get-coords" type="button">show coords</button>
-<button id="add-polygon" type="button">Add new polygon</button>
+<button id="add-polygon" type="button"> Добавить полигон </button>
 
 <script src="js/map-create.js" defer></script>
 

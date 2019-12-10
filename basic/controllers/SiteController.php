@@ -214,23 +214,16 @@ class SiteController extends Controller
         $session->open();
         $id =isset($_SESSION['bird_id']) ? $_SESSION['bird_id'] : null;
         if($id){
-            $coords = Coords::find()->where(['bird_id'=>$id])->all();
-            //$data=array('lat' => $coords->lat, 'lng' => $coords->lng);
+            $coords = Coords::find()->where(['bird_id'=>$id])->orderBy('polygon_number')->all();
             $data = array();
-            $lat=0;
-            $lng=0;
-            $i=0;
-            foreach ($coords as $coord) {
-                array_push($data,array('lat' => $coord->lat, 'lng' => $coord->lng));
-                $lat+=$coord->lat;
-                $lng+=$coord->lng;
-                $i++;
+            if (!$coords) {
+                return json_encode(false);
             }
-            $lat=$lat/$i;
-            $lng=$lng/$i;
-            $center=array('lat' => $lat, 'lng' => $lng);
-            array_push($data, $center);
-            echo json_encode($data);
+            foreach ($coords as $coord) {
+                $data[$coord['polygon_number']][] = ['lat' => $coord->lat, 'lng' => $coord->lng];
+            }
+            
+            return json_encode($data);
         }
       }
 }

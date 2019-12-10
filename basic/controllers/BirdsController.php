@@ -82,13 +82,13 @@ class BirdsController extends Controller
     }
 
 
-public function actionIndex()
-{
-    return $this->render('index');
-}
+    public function actionIndex()
+    {
+        return $this->render('index');
+    }
 // показ всех птиц
-public function actionViewsBirds()
-{
+    public function actionViewsBirds()
+    {
     $query = Bird::find();
 
     $pagination = new Pagination([
@@ -103,9 +103,9 @@ public function actionViewsBirds()
             'birds' => $birds,
             'pagination' => $pagination,
         ]);
-}
+    }
 
-//авторизация
+    //авторизация
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -146,8 +146,8 @@ public function actionViewsBirds()
     }
 
 
-public function actionCreate()
-{
+    public function actionCreate()
+    {
         if(Yii::$app->request->get('name'))
         {
             $name = '\app\models\\'.Yii::$app->request->get('name');
@@ -163,42 +163,49 @@ public function actionCreate()
         }
         else
             return $this->redirect(['index']);
-}
+    }   
 
 
-public function actionCreateEdit($modelName)
-{
-    if(Yii::$app->request->get('modelName'))
+    public function actionCreateEdit($modelName)
     {
-        $name='\app\models\\'.Yii::$app->request->get('modelName');
-        $edit = $name::find()->all();
-        $name = Yii::$app->request->get('modelName');
-        return $this->render($name.'Views', ['edit' => $edit,'name' => $name]);
+        if(Yii::$app->request->get('modelName'))
+        {
+            $name='\app\models\\'.Yii::$app->request->get('modelName');
+            $edit = $name::find()->all();
+            $name = Yii::$app->request->get('modelName');
+            return $this->render($name.'Views', ['edit' => $edit,'name' => $name]);
+        }
+        return $this->goBack();
     }
-    return $this->goBack();
-}
 
-public function saveCoords($path,$id){
-    $path = explode(",",$path);
-    for ($i=0; $i < count($path); $i++) { 
-        $coord = new Coords();
-        $coord->bird_id=$id;
-        $lat = substr($path[$i],1);
-        $coord->lat = $lat;
-        $i++;
-        $lng = substr($path[$i],0,-1);
-        $coord->lng = $lng;
-        $coord->save();
+    public function saveCoords($path, $bird_id){
+        $poly_num = 0;
+        
+        foreach ($path as $poly_path) {
+            foreach ($poly_path as $coords) {
+                $model = new Coords();
+                $model->bird_id = $bird_id;
+                $model->lat = $coords->lat;
+                $model->lng = $coords->lng;
+                $model->polygon_number = $poly_num;
+                $model->save();
+            }
+            $poly_num++;
+        }
     }
-}
 
-public function actionCreateBird()
+    public function actionCreateBird()
     {
         $bird=new Bird();
         $bird->author = Yii::$app->user->id;
         $popul_con = new PopulationConnect();
         $st_con = new StatusConnect();
-        if (Yii::$app->request->isPost&&$st_con->load(Yii::$app->request->post())&&$popul_con->load(Yii::$app->request->post())&&$bird->load(Yii::$app->request->post()))
+        if (
+            Yii::$app->request->isPost &&
+            $st_con->load(Yii::$app->request->post()) &&
+            $popul_con->load(Yii::$app->request->post()) &&
+            $bird->load(Yii::$app->request->post())
+        )
         {
             $bird->link = UploadedFile::getInstance($bird, 'link');
             $bird->area = UploadedFile::getInstance($bird, 'area');
@@ -215,7 +222,7 @@ public function actionCreateBird()
                     $status_connect->save();
                 }
                 $path = Yii::$app->request->post('coords');
-                if($path){
+                if($path && !empty($path) && !empty($path[0])){
                     $this->saveCoords($path,$bird->bird_id);
                 }
                 return $this->redirect(['views-birds']);  
@@ -228,13 +235,24 @@ public function actionCreateBird()
         $population = Population::find()->all();
         $place = Place::find()->all();
         $update = 1;
-        return $this->render('birdCreate', ['bird' => $bird,'popul_con' => $popul_con,'st_con' => $st_con, 'squad' => $squad, 'family' => $family, 'kind' => $kind, 'status' => $status, 'population' => $population, 'place' => $place,'update' => $update]);
+        return $this->render('birdCreate', [
+            'bird' => $bird,
+            'popul_con' => $popul_con,
+            'st_con' => $st_con, 
+            'squad' => $squad, 
+            'family' => $family, 
+            'kind' => $kind, 
+            'status' => $status, 
+            'population' => $population, 
+            'place' => $place,
+            'update' => $update]
+        );
 }
 
     /**********************
     ***********************
     *********************/
-public function actionViewsDetails($id)
+    public function actionViewsDetails($id)
     {
         if($id!=0)
         {
@@ -274,9 +292,9 @@ public function actionViewsDetails($id)
             echo "Missing argument";
             die;
         }
-}
+    }
 
-public function actionDelete($id,$name)
+    public function actionDelete($id,$name)
     {
         $this->findModel($id,$name)->delete();
         header("Location:index.php?r=birds/create-edit&modelName=".$name);
@@ -294,13 +312,13 @@ public function actionDelete($id,$name)
         } 
         else 
         {
-        return $this->render($name.'Create', [
+            return $this->render($name.'Create', [
                 'model' => $model,
             ]);
         }
     }
 
-protected function findModel($id,$name)
+    protected function findModel($id,$name)
     {
         $fullName='\app\models\\'.$name;
         if (($model = $fullName::findOne($id)) !== null) 
@@ -316,7 +334,7 @@ protected function findModel($id,$name)
     /*************************
     *************************
     **************************/
-public function actionDeleteBird($id)
+    public function actionDeleteBird($id)
     {
         $bird = $this->findModelBird($id);
         //$popul_con = PopulationConnect::find()->where(['bird_id' => $bird->bird_id])->deleteAll();
@@ -338,7 +356,7 @@ public function actionDeleteBird($id)
         return $this->redirect(['views-birds']);
     }
 
-public function actionUpdateBird($id)
+    public function actionUpdateBird($id)
     {
         $bird = $this->findModelBird($id);
         $link_old=$bird->link;
@@ -353,7 +371,11 @@ public function actionUpdateBird($id)
                 $status_list[] = $st->status_id;
             }
         $st_con->status_id = $status_list;
-        if ($st_con->load(Yii::$app->request->post())&&$popul_con->load(Yii::$app->request->post())&&$bird->load(Yii::$app->request->post()))
+        if (
+            $st_con->load(Yii::$app->request->post()) &&
+            $popul_con->load(Yii::$app->request->post()) &&
+            $bird->load(Yii::$app->request->post())
+        )
         {
             $link = UploadedFile::getInstance($bird, 'link');
             $area = UploadedFile::getInstance($bird, 'area');
@@ -385,8 +407,8 @@ public function actionUpdateBird($id)
                     $status_connect->status_id = $st;
                     $status_connect->save();
                 }
-                $path = Yii::$app->request->post('coords');
-                if($path){
+                $path = json_decode(Yii::$app->request->post('coords'));
+                if($path && !empty($path) && !empty($path[0])){
                     $coords = Coords::find()->where(['bird_id' => $bird->bird_id])->all();
                     foreach ($coords as $key) {
                         $key->delete();

@@ -7,7 +7,8 @@ use app\models\Kind;
 use app\models\Status;
 use app\models\StatusConnect;
 ?>
-<?php $this->title = 'Птицы'; ?>
+<?php $title = $region == 1 ? 'юга Восточной Сибири' : 'Республики Тыва';?> 
+<?php $this->title = 'База данных птиц '.$title; ?>
 <style>
 body{
     background-image: url('images/background.jpg');
@@ -25,7 +26,6 @@ body{
 }
 
 </style>
-<?php $title = $region == 1 ? 'юга Восточной Сибири' : 'Республики Тыва';?> 
 <div class="banner">
     <h1 class="banner-head">
         Электронная база данных птиц<br>    
