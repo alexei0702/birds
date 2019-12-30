@@ -4,7 +4,12 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
-
+use app\models\Kind;
+use app\models\Squad;
+use app\models\Family;
+use app\models\Population;
+use app\models\Status;
+use app\models\Coords;
 
 class Bird extends \yii\db\ActiveRecord
 {
@@ -42,7 +47,6 @@ class Bird extends \yii\db\ActiveRecord
         else {
             return false;
         }
-        
     }  
 
     public function updateBird()
@@ -64,7 +68,39 @@ class Bird extends \yii\db\ActiveRecord
         } else {
             return false;
         }
-    }    
+    }   
+
+    public function getKind()
+    {
+        return $this->hasOne(Kind::className(), ['kind_id' => 'kind_id']);
+    }
+
+    public function getFamily()
+    {
+        return $this->hasOne(Family::className(), ['family_id' => 'family_id']);
+    }
+
+    public function getSquad()
+    {
+        return $this->hasOne(Squad::className(), ['squad_id' => 'squad_id']);
+    }
+
+    public function getPopulation()
+    {
+        return $this->hasMany(Population::className(), ['population_id' => 'population_id'])
+            ->viaTable('population_connect', ['bird_id' => 'bird_id']);
+    }
+
+    public function getStatuses()
+    {
+        return $this->hasMany(Status::className(), ['status_id' => 'status_id'])
+            ->viaTable('status_connect', ['bird_id' => 'bird_id']);
+    }
+
+    public function getCoords()
+    {
+        return $this->hasMany(Coords::className(), ['bird_id' => 'bird_id']);
+    }
 
 }
 

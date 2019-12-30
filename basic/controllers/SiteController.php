@@ -78,32 +78,11 @@ class SiteController extends Controller
             ->offset($pagination->offset)
             ->limit($pagination->limit)
             ->all();
-        $display = 1;
         return $this->render('index', [
             'birds' => $birds,
             'pagination' => $pagination,
-            'display' => $display,
             'region' => $region,
         ]);
-    }
-    /**********************
-    ***********************
-    *********************/
-    public function actionAllBirds($sort='bird_name', $region = 1)
-    {
-        $query = Bird::find()->where(['region' => $region]);
-        $birds = $query->orderBy($sort)
-            ->all();
-        $display = 0;
-        return $this->render('index', [
-            'birds' => $birds,
-            'display' => $display,
-            'region' => $region,
-        ]);
-    }
-
-    public function actionBuklet(){
-        return $this->render('buklet');
     }
     /**********************
     ***********************
