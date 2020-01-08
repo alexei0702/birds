@@ -2,14 +2,15 @@
 
 namespace app\models;
 
+use app\models\Population;
 use Yii;
 use yii\base\Model;
 use app\models\Kind;
 use app\models\Squad;
 use app\models\Family;
-use app\models\Population;
 use app\models\Status;
 use app\models\Coords;
+use app\models\Place;
 
 class Bird extends \yii\db\ActiveRecord
 {
@@ -91,6 +92,12 @@ class Bird extends \yii\db\ActiveRecord
             ->viaTable('population_connect', ['bird_id' => 'bird_id']);
     }
 
+    public function getPlaces()
+    {
+        return $this->hasMany(Place::className(), ['place_id' => 'place_id'])
+            ->viaTable('population_connect', ['bird_id' => 'bird_id']);
+    }
+
     public function getStatuses()
     {
         return $this->hasMany(Status::className(), ['status_id' => 'status_id'])
@@ -103,5 +110,3 @@ class Bird extends \yii\db\ActiveRecord
     }
 
 }
-
-?>
