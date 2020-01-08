@@ -4,23 +4,17 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
 use app\models\Bird;
 use yii\data\Pagination;
-use app\models\Squad;
-use app\models\Family;
-use app\models\Kind;
-use app\models\Status;
-use app\models\Place;
-use app\models\PopulationConnect;
-use app\models\StatusConnect;
-use app\models\Population;
 use app\models\Coords;
 use yii\web\NotFoundHttpException;
+use app\models\LoginForm;
+use app\models\SignupForm;
 
 class SiteController extends Controller
 {
+
+    public $layout = 'site';
 
     /**
      * @inheritdoc
@@ -62,14 +56,24 @@ class SiteController extends Controller
             ],
         ];
     }
+
     /**
      * Displays homepage.
      *
+     * @param string $sort
+     * @param int $region
+     * @param string $search
      * @return string
      */
-    public function actionIndex($sort='bird_name', $region = 1)
+    public function actionIndex($sort = 'bird_name', $region = 1, $search = '')
     {
         $query = Bird::find()->where(['region' => $region]);
+        $search = trim($search);
+
+        if ($search) {
+            $query->AndWhere(['like','bird_name', $search]);
+        }
+
         $pagination = new Pagination([
             'defaultPageSize' => 6,
             'totalCount' => $query->count(),
@@ -84,111 +88,70 @@ class SiteController extends Controller
             'region' => $region,
         ]);
     }
-    /**********************
-    ***********************
-    *********************/
+
     public function actionAboutUs()
     {
          return $this->render('aboutUs');
     }
-    /**********************
-    ***********************
-    *********************/
+
     public function actionAboutProject()
     {
-         return $this->render('aboutProject');
+        return $this->render('aboutProject');
     }
-    /*********************/
+
     public function actionViewsDetails($id)
     {
-        $session = Yii::$app->session;
-        $session->open();
-        $_SESSION['bird_id']=$id;
-        if($id!=0)
-        {
-            $bird = Bird::find()->where(['bird_id' => $id])->one();
-            if($bird)
-            {
-                $_SESSION['bird_id']=$id;
-                $squad = Squad::find()->where(['squad_id' => $bird->squad_id])->one();
-                if($squad===null){
-                    $squad = new Squad();
-                    $squad->squad_name = "Отряд";
-                    $squad->squad_name_lat = "удален!";
+        if(($bird = Bird::findOne($id)) !== null)
+           return $this->render('birdViews', ['bird' => $bird]);
+        else
+            throw new NotFoundHttpException('Вид не найден!');
+    }
+    // TODO: перенести в закрытую часть
+    public function actionSignup(){
+        $model = new SignupForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
                 }
-                $family = Family::find()->where(['family_id' => $bird->family_id])->one();
-                if($family===null){
-                    $family = new Family();
-                    $family->family_name = "Семейство";
-                    $family->family_name_lat = "удалено!";
-                }
-                $kind = Kind::find()->where(['kind_id' => $bird->kind_id])->one();
-                if($kind===null){
-                    $kind = new Kind();
-                    $kind->kind_name = "Род";
-                    $kind->kind_name_lat = "удален!";
-                }
-                $statusCon = StatusConnect::find()->where(['bird_id' => $bird->bird_id])->all();
-                $popul_con = PopulationConnect::find()->where(['bird_id' => $bird->bird_id])->all();
-                return $this->render('birdViews', ['bird' => $bird,'squad' => $squad, 'family' => $family, 'kind' => $kind, 'statusCon' => $statusCon, 'popul_con' => $popul_con]);
-            }
-            else
-            {
-                echo "Bird not found";
-                die;
             }
         }
-        else
-        {
-            echo "Missing argument";
-            die;
+
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionLogin()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->goBack();
+        } else {
+            return $this->render('login', [
+                'model' => $model,
+            ]);
         }
     }
-    public function actionSearch()
+
+    /**
+     * Logout action.
+     *
+     * @return string
+     */
+    public function actionLogout()
     {
-        if (!empty($_POST['query'])) 
-        {
-            $query = Yii::$app->request->post('query');  
-            $query = trim($query); 
-            //$query = htmlspecialchars($query);
-            if (strlen($query) < 3) {
-                throw new NotFoundHttpException('Слишком короткий поисковый запрос.');
-             } 
-             else 
-            if (strlen($query) > 128) {
-                    throw new NotFoundHttpException('Слишком длинный поисковый запрос.');
-             } 
-             else { 
-                $q = Bird::find()->orWhere(['like','bird_name', $query])->orWhere(['like','bird_name_lat',$query]);
-                $num = $q->count();
-                if ($num>0) { 
-                        $pagination = new Pagination([
-                            'defaultPageSize' => 6,
-                            'totalCount' => $num,
-                            ]);
-                        $birds = $q->orderBy('bird_name')
-                            ->offset($pagination->offset)
-                            ->limit($pagination->limit)
-                            ->all();
-                        return $this->render('search', [
-                            'birds' => $birds,
-                            'pagination' => $pagination,
-                            'query' => $query,
-                            'num' => $num,
-                            ]);
-                    }
-                else
-                {
-                    throw new NotFoundHttpException('Нету.');
-                }
-               }
-            }
-            else
-            {
-                return $this->redirect(['index']);
-            }
-      }
-      public function actionGetCoord(){
+        Yii::$app->user->logout();
+
+        return $this->goHome();
+    }
+
+    public function actionGetCoord(){ // TODO: переделать или убрать вообще
         $session = Yii::$app->session;
         $session->open();
         $id =isset($_SESSION['bird_id']) ? $_SESSION['bird_id'] : null;
@@ -201,8 +164,8 @@ class SiteController extends Controller
             foreach ($coords as $coord) {
                 $data[$coord['polygon_number']][] = ['lat' => $coord->lat, 'lng' => $coord->lng];
             }
-            
+
             return json_encode($data);
         }
-      }
+    }
 }

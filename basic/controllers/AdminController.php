@@ -25,8 +25,10 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\web\HttpException;
 
-class BirdsController extends Controller
+class AdminController extends Controller
 {
+
+    public $layout = 'admin';
 
     public function behaviors() { 
         $session = Yii::$app->session;
@@ -42,7 +44,7 @@ class BirdsController extends Controller
          'roles' => ['?'], 
         ],
 
-        [ 'actions' => ['index','create','create-bird','logout','views-birds','create-edit','views-details','create-static-page', 'birds-from-app'], 
+        [ 'actions' => ['index','create','create-bird','logout','views-birds','create-edit','views-details','create-static-page', 'birds-from-app'],
         'allow' => true, 
         'roles' => ['@'], 
         ], 
@@ -105,45 +107,7 @@ class BirdsController extends Controller
         ]);
     }
 
-    //авторизация
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
 
-        $model = new User();
-        if ($model->load(Yii::$app->request->post())) {
-
-            $user = User::find()->where(['username' => $model->username,'password' => $model->password])->one();
-            if($user)
-
-            {                    
-                Yii::$app->user->login($user);
-                $_SESSION['status']=$user['status'];
-                return $this->goBack();
-            }
-            else
-            {
-               throw new NotFoundHttpException('Incorrect login or password.');
-            }
-        }
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return string
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
 
 
     public function actionCreate()
@@ -225,7 +189,7 @@ class BirdsController extends Controller
                 if($path && !empty($path) && !empty($path[0])){
                     $this->saveCoords($path,$bird->bird_id);
                 }
-                return $this->redirect(['views-birds']);  
+                return $this->redirect(['views-birds']);
             }
         }
         $squad = Squad::find()->all();
@@ -297,7 +261,7 @@ class BirdsController extends Controller
     public function actionDelete($id,$name)
     {
         $this->findModel($id,$name)->delete();
-        header("Location:index.php?r=birds/create-edit&modelName=".$name);
+        header("Location:index.php?r=admin/create-edit&modelName=".$name);
         exit();
     }
 
@@ -307,7 +271,7 @@ class BirdsController extends Controller
         if ($model->load(Yii::$app->request->post()))
         {
             $model->save();
-            header("Location:index.php?r=birds/create-edit&modelName=".$name); 
+            header("Location:index.php?r=admin/create-edit&modelName=".$name);
             exit();
         } 
         else 
@@ -457,7 +421,7 @@ protected function findModelBird($id)
         $page = new StaticPage();
         if(Yii::$app->request->isPost&&$page->load(Yii::$app->request->post())){
                 $page->save();
-                header("Location:index.php?r=birds");
+                header("Location:index.php?r=admin");
                 exit();
         }
             return $this->render('createStaticPage', [
