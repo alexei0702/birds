@@ -23,15 +23,15 @@ $this->params['breadcrumbs'][] = $this->title;
     </tr>
     <tr>
     	<td>Отряд</td>
-        <td><?= Html::encode ("{$squad->squad_name} - {$squad->squad_name_lat}") ?> </td>
+        <td><?= Html::encode ("{$bird->squad->squad_name} - {$bird->squad->squad_name_lat}") ?> </td>
     </tr>
     <tr>
     	<td>Семейство</td>
-        <td><?= Html::encode ("{$family->family_name} - {$family->family_name_lat}") ?> </td>
+        <td><?= Html::encode ("{$bird->family->family_name} - {$bird->family->family_name_lat}") ?> </td>
     </tr>
     <tr>
     	<td>Род</td>
-        <td><?= Html::encode ("{$kind->kind_name} - {$kind->kind_name_lat}") ?> </td>
+        <td><?= Html::encode ("{$bird->kind->kind_name} - {$bird->kind->kind_name_lat}") ?> </td>
     </tr>
     <tr>
     	<td>Распространение</td>
@@ -48,24 +48,19 @@ $this->params['breadcrumbs'][] = $this->title;
     <tr>
     	<td>Статус</td>
     	<td>
-    		<?php 
-    			foreach ($statusCon as $key):
-    			$status = Status::find()->where(['status_id' => $key->status_id])->one();
-    		?>
-    		<?= Html::encode ("{$status->status_name}") ?> 
-    	<?php endforeach; ?>
+    		<?php foreach ($bird->statuses as $status): ?>
+    		    <?= Html::encode ("{$status->status_name}") ?>
+    	    <?php endforeach; ?>
     	</td>
     </tr>
     <tr>
     	<td>Численность</td>
     	<td>
     		<?php 
-    			foreach ($popul_con as $key):
-    			$population = Population::find()->where(['population_id' => $key->population_id])->one();
-    			$place = Place::find()->where(['place_id' => $key->place_id])->one();
+    			for ($i = 0; $i < count($bird->population); $i++):
     		?>
-    		<?= Html::encode ("{$population->population} ($population->population_description) - {$place->place_name}") ?> 
-    	<?php endforeach; ?>
+    		    <?= Html::encode ("{$bird->population[$i]->population} ({$bird->population[$i]->population_description}) - {$bird->places[$i]->place_name}") ?>
+    	<?php endfor; ?>
     	</td>
     </tr>
 </tbody>

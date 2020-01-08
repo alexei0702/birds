@@ -30,7 +30,7 @@
                 </button>
             </a>
         </li>
-        <li>
+        <li> <!-- TODO: поменять href на URL::TO и сортировать не по id -->
             <a href="index.php?r=site/index&sort=kind_id">
                 <button class="bttn-minimal bttn-sm bttn-primary">
                     Сортировать по роду
@@ -55,29 +55,29 @@
 </div>
 <div class="row">
 <?php
-$i=0;
-foreach ($birds as $bird): 
-if($i%3==0):
+    $i=0;
+    foreach ($birds as $bird):
+    if($i%3==0):
 ?>
 </div>
 <br>
 <div class="row">
 <?php endif; ?>
-<div class="col-md-4">
-            <a href='index.php?r=site/views-details&id=<?=$bird->bird_id?>'>
-            <!-- <img src="<?='/basic/upload/'.$bird->link?>" width="300" height="300" class="img-rounded" alt="111"> -->
-            <img src="./../upload/1481549917_gag1.jpg" width="300" height="300" class="img-rounded" alt="111">
-            <br>
-            <?= Html::encode ("{$bird->bird_name} - {$bird->bird_name_lat}") ?><br>
-            <?= Html::encode ("{$bird->squad->squad_name} - {$bird->squad->squad_name_lat}") ?> <br>
-            <?= Html::encode ("{$bird->family->family_name} - {$bird->family->family_name_lat}") ?><br>
-            <?= Html::encode ("{$bird->kind->kind_name} - {$bird->kind->kind_name_lat}") ?> <br>
-            </a>
-</div>
+    <div class="col-md-4">
+        <a href='<?=Url::toRoute(['site/views-details', 'id' => $bird->bird_id])?>'>
+        <!-- <img src="<?='/basic/upload/'.$bird->link?>" width="300" height="300" class="img-rounded" alt="111"> -->
+        <img src="./../upload/1481549917_gag1.jpg" width="300" height="300" class="img-rounded" alt="111">
+        <br>
+        <?= Html::encode ("{$bird->bird_name} - {$bird->bird_name_lat}") ?><br>
+        <?= Html::encode ("{$bird->squad->squad_name} - {$bird->squad->squad_name_lat}") ?> <br>
+        <?= Html::encode ("{$bird->family->family_name} - {$bird->family->family_name_lat}") ?><br>
+        <?= Html::encode ("{$bird->kind->kind_name} - {$bird->kind->kind_name_lat}") ?> <br>
+        </a>
+    </div>
 <?php 
-$i++;
- endforeach;
+    $i++;
+    endforeach;
  ?>
- </div>
+</div>
 <div class="clear-fix"></div>
 <?= LinkPager::widget(['pagination' => $pagination]) ?>

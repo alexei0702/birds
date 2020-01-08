@@ -1,20 +1,6 @@
-
-
-/*
- * -- BASE STYLES --
- * Most of these are inherited from Base, but I want to change a few.
- */ 
-
 p {
     line-height: 1.6em;
 }
-
-/*
- * -- BANNER --
- * The top banner with the headings. By using a combination
- * of `display: table;` and `display: table-cell;`, we can
- * vertically center the text.
- */
 
 .banner {
     background: transparent url('../images/header.jpg') 0 0 no-repeat fixed;
@@ -26,39 +12,25 @@ p {
     width: 100% !important;
     margin-bottom: 3em;
     display: table;
+    border-radius: 40px;
 }
 
-    .banner-head {
-        display: table-cell;
-        vertical-align: middle;
-        margin-bottom: 0;
-        font-size: 2em;
-        color: white;
-        font-weight: 500;
-        text-shadow: 0 1px 1px black;
-    }
+.banner-head {
+    display: table-cell;
+    vertical-align: middle;
+    margin-bottom: 0;
+    font-size: 2em;
+    color: white;
+    font-weight: 500;
+    text-shadow: 0 1px 1px black;
+}
 
-
-/*
- * -- TABLET MEDIA QUERIES --
- * On tablets, we want to slightly adjust the size of the banner
- * text and add some vertical space between the various pricing tables
- */
 @media(min-width: 767px) {
-
     .banner-head {
         font-size: 4em;
     }
-    .pricing-table {
-        margin-bottom: 0;
-    }
-
 }
 
-/*
- * -- PHONE MEDIA QUERIES --
- * On phones, we want to reduce the height and font-size of the banner further
- */
 @media (min-width: 480px) {
     .banner {
         height: 400px;

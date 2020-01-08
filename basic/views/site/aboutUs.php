@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </td>
   </tr>
   <tr>
-    <td>
+    <td> <!-- TODO: сменить фотку -->
         <img src="images/Ефимов.jpg" width="200" height="200" alt="Photo Menya" class="img-circle">
     </td>
     <td>
