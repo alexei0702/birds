@@ -3,6 +3,8 @@
 namespace app\models;
 
 use app\models\Population;
+use app\models\traits\Deleting;
+use app\models\traits\Saving;
 use Yii;
 use yii\base\Model;
 use app\models\Kind;
@@ -11,102 +13,126 @@ use app\models\Family;
 use app\models\Status;
 use app\models\Coords;
 use app\models\Place;
+use yii\db\Exception;
 
 class Bird extends \yii\db\ActiveRecord
 {
+    use Saving;
+    use Deleting;
+
+    const DEFAULT_IMAGE = 'no-image.png';
+    const AREA_PATH = '/area/';
+    const IMAGE_PATH = '/';
+
+    public static function tableName()
+    {
+        return 'birds';
+    }
+    // TODO: add const
     // region: 1 - юг Восточной Сибири, 2 - Республика Тыва
 	public function rules()
     {
         return [
-            [['bird_name','bird_name_lat', 'family_id','squad_id','kind_id', 'propagation', 'migration', 'habitat', 'region'], 'required'],
-            [['link'],'default','value'=>""],
-            [['link', 'area'], 'file', 'extensions' => ['png', 'jpg', 'gif','jpeg']],
+            [['name','name_lat', 'family_id','squad_id','kind_id', 'propagation', 'migration', 'habitat', 'region'], 'required'],
+            [['link'], 'default', 'value' => self::DEFAULT_IMAGE],
+            [['link', 'area'], 'file', 'extensions' => ['png', 'jpg', 'jpeg']],
         ];
     }
 
-
-    public function create()
+    public function saveFiles()
     {
         if ($this->validate()) {
-            if($this->area != null){
-                $this->area->saveAs($_SERVER['DOCUMENT_ROOT'].'/basic/upload/area/' .time()."_". $this->area->baseName . '.' . $this->area->extension);
-                $this->area=time()."_".$this->area->baseName . '.' . $this->area->extension;
-            }
-            if($this->link==null)
-            {
-                $this->link = "noimage.png";
-                return true;
+            $success = true;
+
+            // Сохранение картинки с ареалом
+            if($this->area !== null && !is_string($this->area))
+                if (!($this->area = $this->saveFile($this->area, self::AREA_PATH)))
+                    $success = false;
+            else
+                $this->area = $this->getOldAttribute('area');
+            // Сохранение главной картинки
+            if($this->link !== null && !is_string($this->link)) {
+                $this->link = $this->saveFile($this->link, self::IMAGE_PATH);
+                if (!$this->link)
+                    $success = false;
             }
             else
-            {
-                $this->link->saveAs($_SERVER['DOCUMENT_ROOT'].'/basic/upload/' .time()."_". $this->link->baseName . '.' . $this->link->extension);
-                $this->link=time()."_".$this->link->baseName . '.' . $this->link->extension;
-                /*chmod($_SERVER['DOCUMENT_ROOT'].'/basic/upload/' .time()."_". $this->link->baseName . '.' . $this->link->extension,0755);*/
-                return true;
-            } 
-        }   
-        else {
-            return false;
-        }
-    }  
+                $this->link = $this->getOldAttribute('link');
 
-    public function updateBird()
-    {
-        if ($this->validate()) {
-            if(!is_string($this->area) && $this->area != null){
-                $this->area->saveAs($_SERVER['DOCUMENT_ROOT'].'/basic/upload/area/' .time()."_". $this->area->baseName . '.' . $this->area->extension);
-                $this->area=time()."_".$this->area->baseName . '.' . $this->area->extension;
-            }
-            if(is_string($this->link)){
+            if ($success)
                 return true;
-            }
-            else{
-                $this->link->saveAs($_SERVER['DOCUMENT_ROOT'].'/basic/upload/' .time()."_". $this->link->baseName . '.' . $this->link->extension);
-                $this->link=time()."_".$this->link->baseName . '.' . $this->link->extension;
-                /*chmod($_SERVER['DOCUMENT_ROOT'].'/basic/upload/' .time()."_". $this->link->baseName . '.' . $this->link->extension,0755);*/
-                return true;
-            }
-        } else {
-            return false;
         }
-    }   
+
+        return false;
+    }
+
+    private function saveFile ($file, $path) {
+        $filename = time()."_".$file->baseName . '.' . $file->extension;
+        if ($file->saveAs(\Yii::$app->basePath . Yii::getAlias('@img') . $path . $filename))
+            return $filename;
+        return false;
+    }
+
+    public function deleteFiles() {
+        if ($this->link !== self::DEFAULT_IMAGE)
+            if (!unlink(\Yii::$app->basePath . Yii::getAlias('@img') . self::IMAGE_PATH . $this->link))
+                throw new Exception($this->firstErrors);
+
+        if ($this->area !== null)
+            if (!unlink(\Yii::$app->basePath . Yii::getAlias('@img') . self::AREA_PATH . $this->area))
+                throw new Exception($this->firstErrors);
+    }
 
     public function getKind()
     {
-        return $this->hasOne(Kind::className(), ['kind_id' => 'kind_id']);
+        return $this->hasOne(Kind::className(), ['id' => 'kind_id']);
     }
 
     public function getFamily()
     {
-        return $this->hasOne(Family::className(), ['family_id' => 'family_id']);
+        return $this->hasOne(Family::className(), ['id' => 'family_id']);
     }
 
     public function getSquad()
     {
-        return $this->hasOne(Squad::className(), ['squad_id' => 'squad_id']);
+        return $this->hasOne(Squad::className(), ['id' => 'squad_id']);
     }
 
     public function getPopulation()
     {
-        return $this->hasMany(Population::className(), ['population_id' => 'population_id'])
-            ->viaTable('population_connect', ['bird_id' => 'bird_id']);
+        return $this->hasMany(Population::className(), ['id' => 'population_id'])
+            ->viaTable('population_bird_place', ['bird_id' => 'id']);
     }
 
     public function getPlaces()
     {
-        return $this->hasMany(Place::className(), ['place_id' => 'place_id'])
-            ->viaTable('population_connect', ['bird_id' => 'bird_id']);
+        return $this->hasMany(Place::className(), ['id' => 'place_id'])
+            ->viaTable('population_bird_place', ['bird_id' => 'id']);
     }
 
     public function getStatuses()
     {
-        return $this->hasMany(Status::className(), ['status_id' => 'status_id'])
-            ->viaTable('status_connect', ['bird_id' => 'bird_id']);
+        return $this->hasMany(Status::className(), ['id' => 'status_id'])
+            ->viaTable('status_bird', ['bird_id' => 'id']);
     }
 
     public function getCoords()
     {
-        return $this->hasMany(Coords::className(), ['bird_id' => 'bird_id']);
+        return $this->hasMany(Coords::className(), ['bird_id' => 'id']);
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'name' => 'Название',
+            'name_lat' => 'Название на латыни',
+            'family_id' => 'Семейство',
+            'squad_id' => 'Отряд',
+            'kind_id' => 'Род',
+            'propagation' => 'Распространение',
+            'migration' => 'Миграции',
+            'habitat' => 'Место обитания',
+            'region' => 'Регион'
+        ];
+    }
 }

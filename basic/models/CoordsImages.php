@@ -2,10 +2,6 @@
 
 namespace app\models;
 
-use Yii;
-use yii\base\Model;
-
-
 class CoordsImages extends \yii\db\ActiveRecord
 {
 
@@ -48,5 +44,3 @@ class CoordsImages extends \yii\db\ActiveRecord
         
     } 
 }
-
-?>

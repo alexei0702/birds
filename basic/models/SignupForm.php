@@ -60,7 +60,7 @@
          * @return User|null the saved model or null if saving fails
          * @throws \yii\base\Exception
          */
-        public function signup()
+        public function signUp()
         {
             if (!$this->validate()) {
                 return null;

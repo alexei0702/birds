@@ -2,18 +2,28 @@
 
 namespace app\models;
 
-use Yii;
-use yii\base\Model;
-
-
 class Status extends \yii\db\ActiveRecord
 {
+    public static function getTitle () {
+        return 'Статусы';
+    }
+
+    public static function tableName()
+    {
+        return 'statuses';
+    }
+
 	public function rules()
     {
         return [
-            [['status_name'], 'required'],
+            [['name'], 'required'],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'name' => 'Название'
         ];
     }
 }
-
-?>

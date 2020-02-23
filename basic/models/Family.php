@@ -2,19 +2,24 @@
 
 namespace app\models;
 
-use Yii;
-use yii\base\Model;
-
-
 class Family extends \yii\db\ActiveRecord
 {
 
-public function rules()
+    public static function getTitle () {
+        return 'Семейства';
+    }
+
+    public function rules() {
+        return [
+            [['name','name_lat'], 'required'],
+        ];
+    }
+
+    public function attributeLabels()
     {
         return [
-            [['family_name','family_name_lat'], 'required'],
+            'name' => 'Название',
+            'name_lat' => 'Название на латыни'
         ];
     }
 }
-
-?>

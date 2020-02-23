@@ -2,18 +2,24 @@
 
 namespace app\models;
 
-use Yii;
-use yii\base\Model;
-
-
 class Kind extends \yii\db\ActiveRecord
 {
-public function rules()
+    public static function getTitle () {
+        return 'Рода';
+    }
+
+    public function rules()
     {
         return [
-            [['kind_name','kind_name_lat'], 'required'],
+            [['name','name_lat'], 'required'],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'name' => 'Название',
+            'name_lat' => 'Название на латыни'
         ];
     }
 }
-
-?>

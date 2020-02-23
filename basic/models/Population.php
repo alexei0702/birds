@@ -2,18 +2,17 @@
 
 namespace app\models;
 
-use Yii;
-use yii\base\Model;
-
-
 class Population extends \yii\db\ActiveRecord
 {
+    public static function tableName()
+    {
+        return 'populations';
+    }
+
 	public function rules()
 	    {
 	        return [
-	            [['population_designations','population','population_description','population_dimension_start','population_dimension_end'], 'required'],
+	            [['designations','population','description','dimension_start','dimension_end'], 'required'],
 	        ];
 	    }
 }
-
-?>

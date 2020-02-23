@@ -2,19 +2,28 @@
 
 namespace app\models;
 
-use Yii;
-use yii\base\Model;
-
-
 class Place extends \yii\db\ActiveRecord
 {
+    public static function getTitle () {
+        return 'Места';
+    }
+
+    public static function tableName()
+    {
+        return 'places';
+    }
+
 	public function rules()
     {
         return [
-            [['place_name'], 'required'],
+            [['name'], 'required'],
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'name' => 'Название'
+        ];
+    }
 }
-
-?>

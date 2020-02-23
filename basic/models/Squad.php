@@ -2,18 +2,24 @@
 
 namespace app\models;
 
-use Yii;
-use yii\base\Model;
-
-
 class Squad extends \yii\db\ActiveRecord
 {
+    public static function getTitle () {
+        return 'Отряды';
+    }
+
 	public function rules()
     {
         return [
-            [['squad_name','squad_name_lat'], 'required'],
+            [['name','name_lat'], 'required'],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'name' => 'Название',
+            'name_lat' => 'Название на латыни'
         ];
     }
 }
-
-?>
