@@ -1,6 +1,7 @@
 <?php
 
 $params = require(__DIR__ . '/params.php');
+$aliases = require(__DIR__ . '/aliases.php');
 
 $config = [
     'id' => 'basic',
@@ -49,6 +50,7 @@ $config = [
         */
     ],
     'params' => $params,
+    'aliases' => $aliases,
 ];
 
 if (YII_ENV_DEV) {
