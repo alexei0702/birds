@@ -3,7 +3,7 @@ $('#form-with-map').on('beforeSubmit', function(e) {
     var coords = [];
     for(var i=0;i<path.getLength();i++)
         coords.push(path.getAt(i)); 
-    $('#coord').val(coords);
+    $('#coords').val(coords);
 });
 
 

@@ -6,33 +6,32 @@ function createPolygon (path) {
     strokeWeight: 2,
     fillColor: '#FF0000',
     fillOpacity: 0.35
-  })
+  });
 }
 
-function initMap() {  
-  $.ajax({
-    type:'POST',      
-    url:'/basic/web/index.php?r=site/get-coord',
-    dataType: 'json',     
-    success:function(data){   
-      if (!data){
-        alert("Координаты для этой особи, увы, ещё не занесены в базу!");
-        return;
-      }
+function initMap() {
+  const mapElement = document.getElementById('map');
+  const coords = JSON.parse(mapElement.dataset.coords);
+  if (coords.length === 0) {
+    Swal.fire({
+      icon: 'warning',
+      text: 'Координаты для этого вида ещё не внесены в базу!'
+    });
+    return;
+  }
+  const center = new google.maps.LatLng(52.988843, 108.495045);
 
-      let center = new google.maps.LatLng(52.988843, 108.495045);
+  let map = new google.maps.Map(mapElement, {
+    zoom: 6,
+    center: center
+  });
 
-      let map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 6,
-        center: center
-      });
-      for (let i = 0; i < data.length; i++) {
-        let poly = createPolygon(data[i]);
-        poly.setMap(map);
-      }
-    },
-    error:function(){
-      alert("Координаты для этой особи, увы, ещё не занесены в базу!");
-    }
-  }); 
+  for (let i = 0; i < coords.length; i++) {
+    let poly = createPolygon(coords[i]);
+    poly.setMap(map);
+  }
 }
+
+$(document).ready(function () {
+  initMap();
+});
