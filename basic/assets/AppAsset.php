@@ -19,11 +19,17 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
+        'css/header.css',
+        'css/sweetalert2.min.css'
     ];
     public $js = [
+        'https://cdn.jsdelivr.net/npm/sweetalert2@9'
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
+        'yii\bootstrap\BootstrapAsset'
+    ];
+    public $jsOptions = [
+        'defer' => 'defer'
     ];
 }
