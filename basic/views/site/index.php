@@ -1,12 +1,9 @@
 <?php
+
+    use app\models\Bird;
     use yii\helpers\Html;
     use yii\helpers\Url;
     use yii\widgets\LinkPager;
-    use app\models\Squad;
-    use app\models\Family;
-    use app\models\Kind;
-    use app\models\Status;
-    use app\models\StatusConnect;
 ?>
 <?php $title = $region == 1 ? 'юга Восточной Сибири' : 'Республики Тыва'; ?> 
 <?php $this->title = 'База данных птиц '.$title; ?>
@@ -64,14 +61,14 @@
 <div class="row">
 <?php endif; ?>
     <div class="col-md-4">
-        <a href='<?=Url::toRoute(['site/views-details', 'id' => $bird->bird_id])?>'>
-        <!-- <img src="<?='/basic/upload/'.$bird->link?>" width="300" height="300" class="img-rounded" alt="111"> -->
-        <img src="./../upload/1481549917_gag1.jpg" width="300" height="300" class="img-rounded" alt="111">
+        <a href='<?=Url::toRoute(['site/views-details', 'id' => $bird->id])?>'>
+         <img src="<?=Yii::getAlias('@img') . Bird::IMAGE_PATH . $bird->link?>" width="300" height="300" class="img-rounded" alt="<?= $bird->name ?>">
+<!--        <img src="./../upload/1481549917_gag1.jpg" width="300" height="300" class="img-rounded" alt="111">-->
         <br>
-        <?= Html::encode ("{$bird->bird_name} - {$bird->bird_name_lat}") ?><br>
-        <?= Html::encode ("{$bird->squad->squad_name} - {$bird->squad->squad_name_lat}") ?> <br>
-        <?= Html::encode ("{$bird->family->family_name} - {$bird->family->family_name_lat}") ?><br>
-        <?= Html::encode ("{$bird->kind->kind_name} - {$bird->kind->kind_name_lat}") ?> <br>
+        <?= Html::encode ("{$bird->name} - {$bird->name_lat}") ?><br>
+        <?= Html::encode ("{$bird->squad->name} - {$bird->squad->name_lat}") ?> <br>
+        <?= Html::encode ("{$bird->family->name} - {$bird->family->name_lat}") ?><br>
+        <?= Html::encode ("{$bird->kind->name} - {$bird->kind->name_lat}") ?> <br>
         </a>
     </div>
 <?php 
