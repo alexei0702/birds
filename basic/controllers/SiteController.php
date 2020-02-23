@@ -65,13 +65,13 @@ class SiteController extends Controller
      * @param string $search
      * @return string
      */
-    public function actionIndex($sort = 'bird_name', $region = 1, $search = '')
+    public function actionIndex($sort = 'name', $region = 1, $search = '')
     {
         $query = Bird::find()->where(['region' => $region]);
         $search = trim($search);
 
         if ($search) {
-            $query->AndWhere(['like','bird_name', $search]);
+            $query->AndWhere(['like','name', $search]);
         }
 
         $pagination = new Pagination([
@@ -89,29 +89,50 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function actionAboutUs()
     {
-         return $this->render('aboutUs');
+         return $this->render('about-us');
     }
 
+    /**
+     * @return string
+     */
     public function actionAboutProject()
     {
-        return $this->render('aboutProject');
+        return $this->render('about-project');
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionViewsDetails($id)
     {
-        if(($bird = Bird::findOne($id)) !== null)
-           return $this->render('birdViews', ['bird' => $bird]);
+        if (($bird = Bird::findOne($id)) !== null) {
+            $coords = [];
+
+            foreach ($bird->coords as $coord) {
+                $coords[$coord['polygon_number']][] = ['lat' => $coord->lat, 'lng' => $coord->lng];
+            }
+
+            return $this->render('bird-view', [
+                'bird' => $bird,
+                'coords' => json_encode($coords)
+            ]);
+        }
         else
             throw new NotFoundHttpException('Вид не найден!');
     }
     // TODO: перенести в закрытую часть
-    public function actionSignup(){
+    public function actionSignUp(){
         $model = new SignupForm();
 
         if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
+            if ($user = $model->signUp()) {
                 if (Yii::$app->getUser()->login($user)) {
                     return $this->goHome();
                 }
@@ -123,6 +144,9 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return string|\yii\web\Response
+     */
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -149,23 +173,5 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
-    }
-
-    public function actionGetCoord(){ // TODO: переделать или убрать вообще
-        $session = Yii::$app->session;
-        $session->open();
-        $id =isset($_SESSION['bird_id']) ? $_SESSION['bird_id'] : null;
-        if($id){
-            $coords = Coords::find()->where(['bird_id'=>$id])->orderBy('polygon_number')->all();
-            $data = array();
-            if (!$coords) {
-                return json_encode(false);
-            }
-            foreach ($coords as $coord) {
-                $data[$coord['polygon_number']][] = ['lat' => $coord->lat, 'lng' => $coord->lng];
-            }
-
-            return json_encode($data);
-        }
     }
 }

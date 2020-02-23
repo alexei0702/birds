@@ -8,8 +8,6 @@ use yii\web\Controller;
 use app\models\CoordsImages;
 use app\models\Bird;
 use app\models\User;
-use app\models\JsonTest;
-use yii\data\Pagination;
 use yii\web\UploadedFile;
 use yii\web\HttpException;
 
